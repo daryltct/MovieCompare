@@ -5,26 +5,31 @@ const fetchData = async (searchQuery) => {
 			s: searchQuery
 		}
 	});
+
+	if (response.data.Error) {
+		return [];
+	}
 	return response.data.Search;
 };
 
 const options = document.querySelector('.dropdown-content');
 const dropdown = document.querySelector('.dropdown');
 const input = document.querySelector('input');
-input.addEventListener(
-	'input',
-	debounce(async (event) => {
-		const movies = await fetchData(event.target.value);
 
-		dropdown.classList.add('is-active');
-		onInput(movies, options);
-	})
-);
+const onInput = async (event) => {
+	//Fetch data using input search query
+	const movies = await fetchData(event.target.value);
 
-const onInput = (movies, parentElement) => {
-	//Clear dropdown
+	//Check if there are any search results
+	if (!movies.length) {
+		dropdown.classList.remove('is-active'); //close dropdown
+		return;
+	}
+
+	//Clear dropdown from previous search
 	options.innerHTML = '';
 
+	dropdown.classList.add('is-active');
 	for (let movie of movies) {
 		//Create a tag element, add class, add HTML, addEventListener
 		const option = document.createElement('a');
@@ -38,9 +43,11 @@ const onInput = (movies, parentElement) => {
 			dropdown.classList.remove('is-active');
 			//Fetch and render selected movie data
 		});
-		parentElement.appendChild(option);
+		options.appendChild(option);
 	}
 };
+
+input.addEventListener('input', debounce(onInput));
 
 const renderOption = (movie) => {
 	return `
