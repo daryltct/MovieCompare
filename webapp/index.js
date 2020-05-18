@@ -8,41 +8,43 @@ const fetchData = async (searchQuery) => {
 	return response.data.Search;
 };
 
-//DEBOUNCER
-const debounce = (func, delay = 1000) => {
-	let timerId;
-	return (...args) => {
-		//clears timeout of the previous function call unless no event for (delay)
-		if (timerId) {
-			clearTimeout(timerId);
-		}
-		timerId = setTimeout(() => {
-			func.apply(null, args);
-		}, delay);
-	};
-};
-
 const options = document.querySelector('.dropdown-content');
+const dropdown = document.querySelector('.dropdown');
 const input = document.querySelector('input');
 input.addEventListener(
 	'input',
 	debounce(async (event) => {
 		const movies = await fetchData(event.target.value);
 
-		document.querySelector('.dropdown').classList.add('is-active');
+		dropdown.classList.add('is-active');
 		onInput(movies, options);
 	})
 );
 
 const onInput = (movies, parentElement) => {
+	//Clear dropdown
+	options.innerHTML = '';
+
 	for (let movie of movies) {
-		//create a tag element
+		//Create a tag element, add class, add HTML, addEventListener
 		const option = document.createElement('a');
-		option.innerHTML = `
-            <img src="${movie.Poster}">
-            ${movie.Title}
-        `;
 		option.classList.add('dropdown-item');
+		option.innerHTML = renderOption(movie);
+
+		option.addEventListener('click', () => {
+			//Add title to input
+			input.value = movie.Title;
+			//Close dropdown
+			dropdown.classList.remove('is-active');
+			//Fetch and render selected movie data
+		});
 		parentElement.appendChild(option);
 	}
+};
+
+const renderOption = (movie) => {
+	return `
+        <img src="${movie.Poster}">
+        ${movie.Title}
+    `;
 };
