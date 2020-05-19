@@ -1,5 +1,4 @@
-createAutocomplete({
-	root: document.querySelector('.autocomplete'),
+const autocompleteConfig = {
 	async fetchData(searchQuery) {
 		const response = await axios.get('http://www.omdbapi.com/', {
 			params: {
@@ -19,15 +18,27 @@ createAutocomplete({
             ${movie.Title}
         `;
 	},
-	onOptionSelect(movie) {
-		onMovieSelect(movie);
-	},
 	inputValue(movie) {
 		return movie.Title;
 	}
+};
+
+createAutocomplete({
+	...autocompleteConfig,
+	root: document.querySelector('#left-autocomplete'),
+	onOptionSelect(movie) {
+		onMovieSelect(movie, document.querySelector('#left-details'));
+	}
+});
+createAutocomplete({
+	...autocompleteConfig,
+	root: document.querySelector('#right-autocomplete'),
+	onOptionSelect(movie) {
+		onMovieSelect(movie, document.querySelector('#right-details'));
+	}
 });
 
-const onMovieSelect = async (movie) => {
+const onMovieSelect = async (movie, detailsElement) => {
 	//Fetch movie details of selected movie
 	const response = await axios.get('http://www.omdbapi.com/', {
 		params: {
@@ -36,10 +47,7 @@ const onMovieSelect = async (movie) => {
 		}
 	});
 
-	console.log(response);
-
 	//Render movie details
-	const detailsElement = document.querySelector('.details');
 	renderMovieDetails(response.data, detailsElement);
 };
 
