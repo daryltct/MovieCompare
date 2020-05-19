@@ -13,8 +13,9 @@ const autocompleteConfig = {
 		return response.data.Search;
 	},
 	renderOption(movie) {
+		const imgURL = movie.Poster === 'N/A' ? '' : movie.Poster; //Check if there's valid image source
 		return `
-            <img src="${movie.Poster}">
+            <img src="${imgURL}">
             ${movie.Title}
         `;
 	},
@@ -67,23 +68,23 @@ const renderMovieDetails = (movieDetails, parentElement) => {
                 </div>
             </div>
         </article>
-        <article class="notification is-primary">
+        <article class="notification is-light">
             <p class="title">${movieDetails.Awards}</p>
             <p class="subtitle">Awards</p>
         </article>
-        <article class="notification is-primary">
+        <article class="notification is-light">
             <p class="title">${movieDetails.BoxOffice}</p>
             <p class="subtitle">Box Office</p>
         </article>
-        <article class="notification is-primary">
+        <article class="notification is-light">
             <p class="title">${movieDetails.Metascore}</p>
             <p class="subtitle">Metascore</p>
         </article>
-        <article class="notification is-primary">
+        <article class="notification is-light">
             <p class="title">${movieDetails.imdbRating}</p>
             <p class="subtitle">IMDB Rating</p>
         </article>
-        <article class="notification is-primary">
+        <article class="notification is-light">
             <p class="title">${movieDetails.imdbVotes}</p>
             <p class="subtitle">IMDB Votes</p>
         </article>
