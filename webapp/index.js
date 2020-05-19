@@ -122,3 +122,35 @@ const renderMovieDetails = (movieDetails, detailsElement) => {
         </article>
     `;
 };
+
+const compareMovies = (leftMovie, rightMovie) => {
+	const leftSideStats = document.querySelectorAll('#left-details .notification');
+	const rightSideStats = document.querySelectorAll('#right-details .notification');
+
+	leftSideStats.forEach((leftStat, index) => {
+		const rightStat = rightSideStats[index];
+
+		const leftVal = parseFloat(leftStat.dataset.value);
+		const rightVal = parseFloat(rightStat.dataset.value);
+
+		leftStat.classList.remove('is-light');
+		rightStat.classList.remove('is-light');
+
+		if (leftVal > rightVal) {
+			rightStat.classList.remove('is-primary');
+			rightStat.classList.add('is-warning');
+			leftStat.classList.add('is-primary');
+			leftStat.classList.remove('is-warning');
+		} else if (rightVal > leftVal) {
+			leftStat.classList.remove('is-primary');
+			leftStat.classList.add('is-warning');
+			rightStat.classList.remove('is-warning');
+			rightStat.classList.add('is-primary');
+		} else {
+			leftStat.classList.remove('is-primary');
+			rightStat.classList.remove('is-primary');
+			leftStat.classList.add('is-info');
+			rightStat.classList.add('is-info');
+		}
+	});
+};
