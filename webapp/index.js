@@ -42,6 +42,7 @@ const onInput = async (event) => {
 			//Close dropdown
 			dropdown.classList.remove('is-active');
 			//Fetch and render selected movie data
+			onOptionSelect(movie);
 		});
 		options.appendChild(option);
 	}
@@ -49,9 +50,31 @@ const onInput = async (event) => {
 
 input.addEventListener('input', debounce(onInput));
 
+//Close dropdown when user clicks away
+document.addEventListener('click', () => {
+	if (!dropdown.contains(event.target)) {
+		dropdown.classList.remove('is-active');
+	}
+});
+
 const renderOption = (movie) => {
 	return `
         <img src="${movie.Poster}">
         ${movie.Title}
     `;
+};
+
+const onOptionSelect = async (movie) => {
+	//Fetch movie details of selected movie
+	const response = await axios.get('http://www.omdbapi.com/', {
+		params: {
+			apikey: '9966014d',
+			i: movie.imdbID
+		}
+	});
+
+	console.log(response);
+
+	//Render movie details
+	renderDetails();
 };
